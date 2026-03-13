@@ -1,5 +1,6 @@
 import torch
 from ultralytics import YOLO
+from huggingface_hub import hf_hub_download
 import numpy as np
 from typing import List, Dict, Tuple
 import warnings
@@ -42,11 +43,16 @@ class YOLODetector:
 
         # 如果启用已训练的头盔检测模型
         if use_trained_helmet:
-            print(f"   正在从HuggingFace加载头盔检测模型...")
-            print(f"   模型: {helmet_model}")
+            print(f"   正在从HuggingFace Hub下载头盔检测模型...")
+            print(f"   模型仓库: {helmet_model}")
             try:
-                # 从HuggingFace加载已训练的头盔检测模型
-                self.helmet_model = YOLO(f"huggingface://{helmet_model}")
+                # 使用 huggingface_hub 直接从 HuggingFace Hub 下载已训练的头盔检测模型权重
+                local_model_path = hf_hub_download(
+                    repo_id=helmet_model,
+                    filename="best.pt"
+                )
+                print(f"   模型已下载至: {local_model_path}")
+                self.helmet_model = YOLO(local_model_path)
                 self.helmet_model.to(self.device)
                 print(f"✅ 头盔检测模型加载成功!")
             except Exception as e:
