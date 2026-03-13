@@ -81,7 +81,7 @@ if uploaded_file is not None:
 
     with col_orig:
         st.subheader("📷 原始图片")
-        st.image(cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB), use_container_width=True)
+        st.image(cv2.cvtColor(image_bgr, cv2.COLOR_BGR2RGB), use_column_width=True)
 
     with st.spinner("🔄 正在加载模型并检测，请稍候…"):
         try:
@@ -101,7 +101,7 @@ if uploaded_file is not None:
     with col_result:
         st.subheader("🔍 检测结果")
         annotated_rgb = cv2.cvtColor(result["annotated_image"], cv2.COLOR_BGR2RGB)
-        st.image(annotated_rgb, use_container_width=True)
+        st.image(annotated_rgb, use_column_width=True)
 
     # ── Stats ─────────────────────────────────────────────────────────────────
     st.markdown("---")
