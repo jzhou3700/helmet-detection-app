@@ -1,10 +1,21 @@
 """项目配置文件"""
 
 YOLO_CONFIG = {
-    "model_name": "yolov8n.pt",
+    # 行人检测模型（标准COCO）
+    "person_detector_model": "yolov8n.pt",
+
+    # 头盔检测模型（已训练，来自HuggingFace）
+    # HuggingFace repo: keremberke/yolov8m-helmet-detection
+    # 类别: 0=helmet, 1=head
+    "helmet_detector_model": "keremberke/yolov8m-helmet-detection",
+
     "confidence_threshold": 0.5,
     "iou_threshold": 0.45,
 }
+
+# True=使用已训练的头盔检测模型（推荐）
+# False=使用启发式HSV颜色分析（备用）
+USE_TRAINED_HELMET_MODEL = True
 
 VIDEO_CONFIG = {
     "supported_formats": ["mp4", "avi", "mov", "mkv", "flv", "wmv"],

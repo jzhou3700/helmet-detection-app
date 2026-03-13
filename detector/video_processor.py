@@ -70,7 +70,10 @@ class VideoProcessor:
             
             no_helmet_in_frame = 0
             for person in persons:
-                has_helmet = self._check_helmet_heuristic(frame, person["bbox"])
+                if self.detector.use_trained_helmet:
+                    has_helmet = self._check_helmet_trained(frame, person["bbox"])
+                else:
+                    has_helmet = self._check_helmet_heuristic(frame, person["bbox"])
                 
                 if not has_helmet:
                     no_helmet_in_frame += 1
@@ -104,6 +107,10 @@ class VideoProcessor:
         print(f"✅ 视频处理完成!")
         return stats
     
+    def _check_helmet_trained(self, frame: np.ndarray, bbox) -> bool:
+        """使用已训练的头盔检测模型检查是否佩戴头盔"""
+        return self.detector.detect_helmet_trained(frame, bbox)
+
     def _check_helmet_heuristic(self, frame: np.ndarray, bbox: Tuple[int, int, int, int]) -> bool:
         """启发式检查是否佩戴头盔"""
         x1, y1, x2, y2 = [int(x) for x in bbox]

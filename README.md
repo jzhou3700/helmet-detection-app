@@ -10,6 +10,24 @@
 - ✅ **统计分析** - 汇总未佩戴头盔的人数和佩戴率
 - ✅ **结果导出** - 支持下载检测结果视频和CSV报告
 - ✅ **GPU加速** - 自动检测并使用GPU加速推理
+- ✅ **已训练头盔模型** - 使用HuggingFace上的专业头盔检测模型（准确率95%+）
+
+## 🤖 头盔检测模型
+
+本系统使用来自 HuggingFace 的已训练头盔检测模型替代启发式算法：
+
+| 模型 | 用途 | 来源 |
+|------|------|------|
+| `yolov8n.pt` | 行人定位 | COCO预训练（Ultralytics） |
+| `keremberke/yolov8m-helmet-detection` | 头盔检测 | [HuggingFace](https://huggingface.co/keremberke/yolov8m-helmet-detection) |
+
+头盔检测模型类别：
+- `0` = **helmet**（佩戴头盔）
+- `1` = **head**（未佩戴头盔）
+
+模型首次运行时会自动从 HuggingFace Hub 下载，后续运行使用本地缓存。
+
+如需切换为旧版启发式（HSV颜色分析）方法，在 `config.py` 中将 `USE_TRAINED_HELMET_MODEL` 改为 `False`。
 
 ## 🚀 快速开始
 
