@@ -39,6 +39,35 @@ venv\Scripts\activate     # Windows
 pip install -r requirements.txt
 ```
 
+> **⚠️ 如果遇到 SSL 证书错误**（`SSL: CERTIFICATE_VERIFY_FAILED`），请按以下顺序尝试：
+>
+> **方法一：更新 SSL 证书（推荐，安全）**
+> ```bash
+> # 更新 pip 和 certifi（Python SSL 证书库）
+> pip install --upgrade pip certifi
+> pip install -r requirements.txt
+> ```
+>
+> **方法二：使用国内镜像源（推荐，适合国内网络环境）**
+> ```bash
+> pip install -r requirements.txt -i https://pypi.tuna.tsinghua.edu.cn/simple/
+> ```
+>
+> **方法三：使用项目提供的 pip 配置文件**（已配置清华镜像源）
+> ```bash
+> # Linux/Mac：直接引用配置文件
+> pip install -r requirements.txt --config-file pip.conf
+>
+> # 或将 pip.conf 复制到用户配置目录，后续安装自动生效
+> mkdir -p ~/.config/pip && cp pip.conf ~/.config/pip/pip.conf
+> pip install -r requirements.txt
+> ```
+>
+> **方法四：临时信任 PyPI 主机（⚠️ 仅限无法解决证书问题时使用，存在安全风险）**
+> ```bash
+> pip install -r requirements.txt --trusted-host pypi.org --trusted-host pypi.python.org --trusted-host files.pythonhosted.org
+> ```
+
 4. 运行应用
 ```bash
 streamlit run app.py
@@ -72,6 +101,7 @@ helmet-detection-app/
 ├── app.py
 ├── config.py
 ├── requirements.txt
+├── pip.conf
 ├── README.md
 ├── .gitignore
 ├── .env.example
