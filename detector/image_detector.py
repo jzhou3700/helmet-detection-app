@@ -18,7 +18,7 @@ class ImageDetector:
 
     def __init__(
         self,
-        model_name: str = "keremberke/yolov8m-helmet-detection",
+        model_name: str = "tdcdpd/Helmet_Detection",
         confidence_threshold: float = 0.4,
         iou_threshold: float = 0.45,
     ):
@@ -26,7 +26,7 @@ class ImageDetector:
         self.confidence_threshold = confidence_threshold
         self.iou_threshold = iou_threshold
 
-        self.model = YOLO(f"huggingface://{model_name}")
+        self.model = YOLO("../models/best.pt")
         self.model.to(self.device)
 
     def detect(self, image_bgr: np.ndarray) -> Dict:

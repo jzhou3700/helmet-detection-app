@@ -11,7 +11,7 @@ class YOLODetector:
 
     def __init__(self,
                  person_model: str = "yolov8n.pt",
-                 helmet_model: str = "keremberke/yolov8m-helmet-detection",
+                 helmet_model: str = "tdcdpd/Helmet_Detection",
                  use_trained_helmet: bool = True,
                  confidence_threshold: float = 0.5,
                  iou_threshold: float = 0.45):
