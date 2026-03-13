@@ -67,13 +67,16 @@ class ImageDetector:
             result = results[0]
             # Build a set of class ids that represent "wearing a helmet".
             # The tdcdpd/Helmet_Detection model uses class names such as
-            # "helmet" / "no helmet" / "no-helmet".
-            # We match case-insensitively: treat any class containing "helmet"
-            # but NOT preceded by "no" as a positive (wearing) detection.
+            # "with helmet" / "without helmet" / "helmet" / "no helmet" / "no-helmet".
+            # We match case-insensitively: treat a class as a positive (wearing)
+            # detection only when its name contains "helmet" but does NOT contain
+            # "without" and does NOT start with "no".
             helmet_class_ids = {
                 cid
                 for cid, name in result.names.items()
-                if "helmet" in name.lower() and not name.lower().startswith("no")
+                if "helmet" in name.lower()
+                and "without" not in name.lower()
+                and not name.lower().startswith("no")
             }
 
             for box in result.boxes:
