@@ -5,6 +5,7 @@ from pathlib import Path
 import tempfile
 from detector.yolo_detector import YOLODetector
 from detector.video_processor import VideoProcessor
+from config import YOLO_CONFIG, USE_TRAINED_HELMET_MODEL
 import os
 import csv
 from io import StringIO
@@ -156,7 +157,9 @@ if uploaded_file is not None:
     try:
         with st.spinner("🔄 正在初始化YOLO模型..."):
             detector = YOLODetector(
-                model_name="yolov8n.pt",
+                person_model=YOLO_CONFIG["person_detector_model"],
+                helmet_model=YOLO_CONFIG["helmet_detector_model"],
+                use_trained_helmet=USE_TRAINED_HELMET_MODEL,
                 confidence_threshold=confidence_threshold,
                 iou_threshold=iou_threshold
             )

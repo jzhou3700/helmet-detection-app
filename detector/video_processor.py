@@ -25,6 +25,7 @@ class VideoProcessor:
         """处理视频文件"""
         print(f"🎬 开始处理视频...")
         print(f"   输入: {input_path}")
+        print(f"   使用已训练头盔检测: {self.detector.use_trained_helmet}")
         
         cap = cv2.VideoCapture(input_path)
         
@@ -70,7 +71,12 @@ class VideoProcessor:
             
             no_helmet_in_frame = 0
             for person in persons:
-                has_helmet = self._check_helmet_heuristic(frame, person["bbox"])
+                # 使用已训练的头盔检测模型（如果启用）
+                if self.detector.use_trained_helmet:
+                    has_helmet = self.detector.detect_helmet_trained(frame, person["bbox"])
+                else:
+                    # 备选：使用启发式方法
+                    has_helmet = self._check_helmet_heuristic(frame, person["bbox"])
                 
                 if not has_helmet:
                     no_helmet_in_frame += 1
