@@ -86,7 +86,7 @@ if uploaded_file is not None:
     with st.spinner("🔄 正在加载模型并检测，请稍候…"):
         try:
             detector = ImageDetector(
-                model_name=YOLO_CONFIG["helmet_detector_model"],
+                model_path=YOLO_CONFIG["helmet_detector_model"],
                 confidence_threshold=confidence_threshold,
                 iou_threshold=iou_threshold,
             )

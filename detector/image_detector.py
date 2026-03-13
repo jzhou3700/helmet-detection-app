@@ -1,11 +1,16 @@
 import torch
 import numpy as np
 import cv2
+from pathlib import Path
 from typing import Dict, Tuple
 from ultralytics import YOLO
 import warnings
 
 warnings.filterwarnings('ignore')
+
+# Project root is one level above this file (detector/image_detector.py → project root)
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_DEFAULT_MODEL_PATH = str(_PROJECT_ROOT / "models" / "best.pt")
 
 
 class ImageDetector:
@@ -18,7 +23,7 @@ class ImageDetector:
 
     def __init__(
         self,
-        model_name: str = "tdcdpd/Helmet_Detection",
+        model_path: str = _DEFAULT_MODEL_PATH,
         confidence_threshold: float = 0.4,
         iou_threshold: float = 0.45,
     ):
@@ -26,7 +31,12 @@ class ImageDetector:
         self.confidence_threshold = confidence_threshold
         self.iou_threshold = iou_threshold
 
-        self.model = YOLO(f"huggingface://{model_name}")
+        if not Path(model_path).exists():
+            raise FileNotFoundError(
+                f"模型文件未找到: {model_path}\n"
+                "请将 best.pt 放置到项目根目录的 models/ 文件夹中。"
+            )
+        self.model = YOLO(model_path)
         self.model.to(self.device)
 
     def detect(self, image_bgr: np.ndarray) -> Dict:

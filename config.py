@@ -1,12 +1,14 @@
 """项目配置文件"""
 
-# YOLO模型配置 - 已更新以支持HuggingFace
+# YOLO模型配置
 YOLO_CONFIG = {
     # 行人检测模型（标准COCO）
     "person_detector_model": "yolov8n.pt",
 
-    # 头盔检测模型（来自HuggingFace，已训练）
-    "helmet_detector_model": "tdcdpd/Helmet_Detection",
+    # 头盔检测模型（本地文件）
+    # 请将训练好的 best.pt 放置到项目根目录的 models/ 文件夹中
+    # 模型可从 HuggingFace Space https://huggingface.co/spaces/tdcdpd/Helmet_Detection 下载
+    "helmet_detector_model": "models/best.pt",
 
     "confidence_threshold": 0.5,
     "iou_threshold": 0.45,
@@ -39,9 +41,4 @@ MODEL_OPTIONS = {
     "small": "yolov8s.pt",
     "medium": "yolov8m.pt",
     "large": "yolov8l.pt",
-}
-
-# HuggingFace模型选项
-HELMET_MODELS = {
-    "tdcdpd-helmet": "tdcdpd/Helmet_Detection",
 }
