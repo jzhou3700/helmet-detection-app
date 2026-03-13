@@ -3,6 +3,7 @@ import numpy as np
 import cv2
 from typing import Dict, Tuple
 from ultralytics import YOLO
+from huggingface_hub import hf_hub_download
 import warnings
 
 warnings.filterwarnings('ignore')
@@ -26,7 +27,12 @@ class ImageDetector:
         self.confidence_threshold = confidence_threshold
         self.iou_threshold = iou_threshold
 
-        self.model = YOLO(f"huggingface://{model_name}")
+        model_path = hf_hub_download(
+            repo_id=model_name,
+            filename="best.pt",
+            repo_type="space",
+        )
+        self.model = YOLO(model_path)
         self.model.to(self.device)
 
     def detect(self, image_bgr: np.ndarray) -> Dict:
