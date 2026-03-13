@@ -6,7 +6,7 @@ YOLO_CONFIG = {
     "person_detector_model": "yolov8n.pt",
 
     # 头盔检测模型（来自HuggingFace，已训练）
-    "helmet_detector_model": "keremberke/yolov8m-helmet-detection",
+    "helmet_detector_model": "tdcdpd/Helmet_Detection",
 
     "confidence_threshold": 0.5,
     "iou_threshold": 0.45,
@@ -43,6 +43,5 @@ MODEL_OPTIONS = {
 
 # HuggingFace模型选项
 HELMET_MODELS = {
-    "yolov8m-helmet": "keremberke/yolov8m-helmet-detection",
-    "yolov8s-helmet": "keremberke/yolov8s-helmet-detection",
+    "tdcdpd-helmet": "tdcdpd/Helmet_Detection",
 }

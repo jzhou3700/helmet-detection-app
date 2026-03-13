@@ -18,7 +18,7 @@ class ImageDetector:
 
     def __init__(
         self,
-        model_name: str = "keremberke/yolov8m-helmet-detection",
+        model_name: str = "tdcdpd/Helmet_Detection",
         confidence_threshold: float = 0.4,
         iou_threshold: float = 0.45,
     ):
@@ -56,9 +56,10 @@ class ImageDetector:
         if results and results[0].boxes is not None:
             result = results[0]
             # Build a set of class ids that represent "wearing a helmet".
-            # The keremberke model names classes as "helmet" / "no-helmet".
-            # We match case-insensitively and treat anything containing "helmet"
-            # but NOT "no" (before "helmet") as a positive detection.
+            # The tdcdpd/Helmet_Detection model uses class names such as
+            # "helmet" / "no helmet" / "no-helmet".
+            # We match case-insensitively: treat any class containing "helmet"
+            # but NOT preceded by "no" as a positive (wearing) detection.
             helmet_class_ids = {
                 cid
                 for cid, name in result.names.items()

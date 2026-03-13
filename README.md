@@ -128,8 +128,7 @@ MIT License
 
 ### 使用的模型
 
-- **行人检测**：YOLOv8n（标准COCO模型）
-- **头盔检测**：keremberke/yolov8m-helmet-detection（来自HuggingFace）
+- **头盔检测**：tdcdpd/Helmet_Detection（来自HuggingFace）
 
 ### 模型自动下载
 
