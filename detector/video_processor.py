@@ -25,7 +25,6 @@ class VideoProcessor:
         """处理视频文件"""
         print(f"🎬 开始处理视频...")
         print(f"   输入: {input_path}")
-        print(f"   使用已训练头盔检测: {self.detector.use_trained_helmet}")
         
         cap = cv2.VideoCapture(input_path)
         
@@ -71,12 +70,7 @@ class VideoProcessor:
             
             no_helmet_in_frame = 0
             for person in persons:
-                # 使用已训练的头盔检测模型（如果启用）
-                if self.detector.use_trained_helmet:
-                    has_helmet = self.detector.detect_helmet_trained(frame, person["bbox"])
-                else:
-                    # 备选：使用启发式方法
-                    has_helmet = self._check_helmet_heuristic(frame, person["bbox"])
+                has_helmet = person["has_helmet"]
                 
                 if not has_helmet:
                     no_helmet_in_frame += 1
@@ -109,52 +103,6 @@ class VideoProcessor:
         
         print(f"✅ 视频处理完成!")
         return stats
-    
-    def _check_helmet_heuristic(self, frame: np.ndarray, bbox: Tuple[int, int, int, int]) -> bool:
-        """启发式检查是否佩戴头盔"""
-        x1, y1, x2, y2 = [int(x) for x in bbox]
-        person_height = y2 - y1
-        
-        if person_height <= 0 or x1 < 0 or y1 < 0:
-            return False
-        
-        head_y1 = y1
-        head_y2 = int(y1 + person_height * 0.25)
-        head_y2 = max(head_y2, y1 + 30)
-        
-        head_y2 = min(head_y2, frame.shape[0])
-        x1 = max(x1, 0)
-        x2 = min(x2, frame.shape[1])
-        
-        if head_y2 <= head_y1 or x1 >= x2:
-            return False
-        
-        try:
-            head_roi = frame[head_y1:head_y2, x1:x2]
-            
-            if head_roi.size == 0:
-                return False
-            
-            hsv = cv2.cvtColor(head_roi, cv2.COLOR_BGR2HSV)
-            
-            lower_dark = np.array([0, 0, 0])
-            upper_dark = np.array([180, 255, 100])
-            
-            dark_mask = cv2.inRange(hsv, lower_dark, upper_dark)
-            dark_ratio = np.sum(dark_mask > 0) / dark_mask.size
-            
-            lower_bright = np.array([0, 0, 150])
-            upper_bright = np.array([180, 50, 255])
-            
-            bright_mask = cv2.inRange(hsv, lower_bright, upper_bright)
-            bright_ratio = np.sum(bright_mask > 0) / bright_mask.size
-            
-            has_helmet = (dark_ratio > 0.25) or (bright_ratio > 0.2)
-            
-            return has_helmet
-        
-        except Exception as e:
-            return False
     
     def _draw_bbox(self, frame: np.ndarray, bbox: Tuple[int, int, int, int],
                    has_helmet: bool, confidence: float):
@@ -227,3 +175,4 @@ class VideoProcessor:
                 color,
                 2
             )
+
