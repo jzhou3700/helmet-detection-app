@@ -36,3 +36,4 @@ output/
 *.log
 .cache/
 runs/
+models/*.pt

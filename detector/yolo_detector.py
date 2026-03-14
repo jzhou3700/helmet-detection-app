@@ -143,8 +143,13 @@ class YOLODetector:
                         class_name = result.names[int(box.cls[0])]
                         confidence = float(box.conf[0])
 
-                        # 检查是否检测到helmet类别（较高阈值以减少误判）
-                        if "helmet" in class_name.lower() and confidence > 0.4:
+                        # 检查是否检测到"佩戴头盔"类别（排除"without helmet"/"no helmet"等未佩戴类别，较高阈值以减少误判）
+                        if (
+                            "helmet" in class_name.lower()
+                            and "without" not in class_name.lower()
+                            and not class_name.lower().startswith("no")
+                            and confidence > 0.4
+                        ):
                             return True
 
             return False

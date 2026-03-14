@@ -1,11 +1,16 @@
 import torch
 import numpy as np
 import cv2
+from pathlib import Path
 from typing import Dict, Tuple
 from ultralytics import YOLO
 import warnings
 
 warnings.filterwarnings('ignore')
+
+# Project root is one level above this file (detector/image_detector.py → project root)
+_PROJECT_ROOT = Path(__file__).resolve().parent.parent
+_DEFAULT_MODEL_PATH = str(_PROJECT_ROOT / "models" / "best.pt")
 
 
 class ImageDetector:
@@ -18,7 +23,7 @@ class ImageDetector:
 
     def __init__(
         self,
-        model_name: str = "tdcdpd/Helmet_Detection",
+        model_path: str = _DEFAULT_MODEL_PATH,
         confidence_threshold: float = 0.4,
         iou_threshold: float = 0.45,
     ):
@@ -26,7 +31,12 @@ class ImageDetector:
         self.confidence_threshold = confidence_threshold
         self.iou_threshold = iou_threshold
 
-        self.model = YOLO("../models/best.pt")
+        if not Path(model_path).exists():
+            raise FileNotFoundError(
+                f"模型文件未找到: {model_path}\n"
+                "请将 best.pt 放置到项目根目录的 models/ 文件夹中。"
+            )
+        self.model = YOLO(model_path)
         self.model.to(self.device)
 
     def detect(self, image_bgr: np.ndarray) -> Dict:
@@ -56,13 +66,17 @@ class ImageDetector:
         if results and results[0].boxes is not None:
             result = results[0]
             # Build a set of class ids that represent "wearing a helmet".
-            # The keremberke model names classes as "helmet" / "no-helmet".
-            # We match case-insensitively and treat anything containing "helmet"
-            # but NOT "no" (before "helmet") as a positive detection.
+            # The tdcdpd/Helmet_Detection model uses class names such as
+            # "with helmet" / "without helmet" / "helmet" / "no helmet" / "no-helmet".
+            # We match case-insensitively: treat a class as a positive (wearing)
+            # detection only when its name contains "helmet" but does NOT contain
+            # "without" and does NOT start with "no".
             helmet_class_ids = {
                 cid
                 for cid, name in result.names.items()
-                if "helmet" in name.lower() and not name.lower().startswith("no")
+                if "helmet" in name.lower()
+                and "without" not in name.lower()
+                and not name.lower().startswith("no")
             }
 
             for box in result.boxes:
