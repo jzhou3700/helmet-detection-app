@@ -211,6 +211,7 @@ with video_tab:
             with st.spinner("🔄 正在加载视频检测模型，请稍候…"):
                 detector = YOLODetector(
                     person_model=YOLO_CONFIG["person_detector_model"],
+                    helmet_model=YOLO_CONFIG["helmet_detector_model"],
                     use_trained_helmet=USE_TRAINED_HELMET_MODEL,
                     confidence_threshold=confidence_threshold,
                     iou_threshold=iou_threshold,

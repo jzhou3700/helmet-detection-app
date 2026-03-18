@@ -7,7 +7,7 @@ YOLO_CONFIG = {
 
     # 头盔检测模型（本地文件）
     # 请将训练好的 best.pt 放置到项目根目录的 models/ 文件夹中
-    # 模型可从 HuggingFace Space https://huggingface.co/spaces/tdcdpd/Helmet_Detection 下载
+    # 该 best.pt 即可由 huggingface://tdcdpd/Helmet_Detection 下载后保存到本地
     "helmet_detector_model": "models/best.pt",
 
     "confidence_threshold": 0.5,

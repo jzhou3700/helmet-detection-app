@@ -3,6 +3,7 @@ from ultralytics import YOLO
 import numpy as np
 from typing import List, Dict, Tuple
 import warnings
+from pathlib import Path
 
 warnings.filterwarnings('ignore')
 
@@ -11,7 +12,7 @@ class YOLODetector:
 
     def __init__(self,
                  person_model: str = "yolov8n.pt",
-                 helmet_model: str = "tdcdpd/Helmet_Detection",
+                 helmet_model: str = "models/best.pt",
                  use_trained_helmet: bool = True,
                  confidence_threshold: float = 0.5,
                  iou_threshold: float = 0.45):
@@ -20,7 +21,7 @@ class YOLODetector:
 
         Args:
             person_model: 行人检测模型
-            helmet_model: 头盔检测模型（来自HuggingFace）
+            helmet_model: 头盔检测模型（本地路径优先；也支持HuggingFace仓库ID）
             use_trained_helmet: 是否使用已训练的头盔检测模型
             confidence_threshold: 置信度阈值
             iou_threshold: IOU阈值
@@ -42,15 +43,25 @@ class YOLODetector:
 
         # 如果启用已训练的头盔检测模型
         if use_trained_helmet:
-            print(f"   正在从HuggingFace加载头盔检测模型...")
-            print(f"   模型: {helmet_model}")
+            print(f"   头盔检测模型配置: {helmet_model}")
             try:
-                # 从HuggingFace加载已训练的头盔检测模型
-                self.helmet_model = YOLO(f"huggingface://{helmet_model}")
+                # 优先加载本地模型文件，避免重复联网下载
+                local_path = Path(helmet_model)
+                if local_path.exists():
+                    print(f"   优先加载本地头盔模型: {local_path}")
+                    load_target = str(local_path)
+                elif helmet_model.startswith("huggingface://"):
+                    print(f"   使用HuggingFace模型: {helmet_model}")
+                    load_target = helmet_model
+                else:
+                    print(f"   本地文件不存在，尝试从HuggingFace加载: {helmet_model}")
+                    load_target = f"huggingface://{helmet_model}"
+
+                self.helmet_model = YOLO(load_target)
                 self.helmet_model.to(self.device)
                 print(f"✅ 头盔检测模型加载成功!")
             except Exception as e:
-                print(f"⚠️  无法从HuggingFace加载头盔模型: {e}")
+                print(f"⚠️  头盔模型加载失败: {e}")
                 print(f"   将使用启发式方法进行头盔检测")
                 self.use_trained_helmet = False
 
