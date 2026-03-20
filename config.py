@@ -8,13 +8,14 @@ YOLO_CONFIG = {
     # 头盔检测模型（本地文件）
     # 请将训练好的 best.pt 放置到项目根目录的 models/ 文件夹中
     # 该 best.pt 即可由 huggingface://tdcdpd/Helmet_Detection 下载后保存到本地
+    # 注意：当前业务模型仅标注骑电动车的人员/乘员，普通行人不会被框出
     "helmet_detector_model": "models/best.pt",
 
     "confidence_threshold": 0.5,
     "iou_threshold": 0.45,
 }
 
-# 是否使用已训练的头盔检测模型（推荐True）
+# 是否使用已训练的头盔检测模型（推荐True；保持该值可确保仅检测骑行目标）
 USE_TRAINED_HELMET_MODEL = True
 
 VIDEO_CONFIG = {
