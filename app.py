@@ -8,7 +8,6 @@ import streamlit as st
 from pathlib import Path
 from PIL import Image
 from detector.image_detector import ImageDetector
-from detector.yolo_detector import YOLODetector
 from detector.video_processor import VideoProcessor
 from config import YOLO_CONFIG
 from config import VIDEO_CONFIG, USE_TRAINED_HELMET_MODEL
@@ -229,10 +228,8 @@ with video_tab:
             ).name
 
             with st.spinner("🔄 正在加载视频检测模型，请稍候…"):
-                detector = YOLODetector(
-                    person_model=YOLO_CONFIG["person_detector_model"],
-                    helmet_model=YOLO_CONFIG["helmet_detector_model"],
-                    use_trained_helmet=USE_TRAINED_HELMET_MODEL,
+                detector = ImageDetector(
+                    model_path=YOLO_CONFIG["helmet_detector_model"],
                     confidence_threshold=confidence_threshold,
                     iou_threshold=iou_threshold,
                 )

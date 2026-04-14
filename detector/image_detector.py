@@ -117,8 +117,9 @@ class ImageDetector:
 			"annotated_image": annotated_image,
 			"helmet_count": helmet_count,
 			"no_helmet_count": no_helmet_count,
-			"detections": detections,
+			"persons": detections,
 			"raw_results": results,
+			"using_trained_helmet": True,
 		}
 
 	def _draw_detection(
